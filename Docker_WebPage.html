@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Docker WebUI</title>
+</head>
+<link href="https://fonts.googleapis.com/css?family=Baloo+Bhai&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+    /* CSS Reset */
+    body {
+        font-family: 'Baloo Bhai', cursive;
+        color: white;
+        margin: 0px;
+        padding: 0px;
+        background:  rgb(6, 194, 194);
+    }
+ 
+    .left {
+        display: inline-block;
+        position: absolute;
+        color: brown;
+        left: 60px;
+        top: 80px;
+    } 
+
+    .left div {
+        line-height: 19px;
+        font-size: 26px;
+        text-align: center;
+    }
+
+    .mid {
+        display: block;
+        width: 45%;
+        margin: 29px auto;
+        /* border: 2px solid green; */
+    }
+
+    .right {
+        position: absolute;
+        right: 34px;
+        top: 43px;
+        display: inline-block;
+        /* border: 2px solid yellow; */
+    }
+
+    .navbar {
+        display: inline-block;
+    }
+
+    .navbar li {
+        display: inline-block;
+        font-size: 25px;
+    }
+
+    .navbar li a {
+        color: white;
+        text-decoration: none;
+        padding: 34px 23px;
+
+    }
+
+    .navbar li a:hover,
+    .navbar li a.active {
+        text-decoration: underline;
+        color: grey;
+
+    }
+
+    .btn {
+        font-family: 'Baloo Bhai', cursive;
+        margin: 0px 9px;
+        background-color: black;
+        color: white;
+        padding: 4px 14px;
+        border: 2px solid grey;
+        border-radius: 10px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: rgb(31, 30, 30);
+    }
+
+    .container {
+        border: 2px solid white;
+        margin: 100px 350px;
+        padding: 50px;
+        width: 35%;
+        color: brown;
+        border-radius: 28px;
+    }
+
+    .form-group input {
+        font-family: 'Baloo Bhai', cursive;
+        text-align: center;
+        display: block;
+        width: 508px;
+        padding: 1px;
+        border: 2px solid black;
+        margin: 11px auto;
+        font-size: 25px;
+        border-radius: 8px;
+    }
+
+    .container h1 {
+        text-align: center;
+    }
+
+    .container button {
+        display: block;
+        width: 30%;
+        margin: 20px auto;
+    }
+</style>
+
+<body>
+    <header class="header">
+        <!-- Left box for logo -->
+        <div class="left">
+            <div>Docker WebUI</div>
+        </div>
+        <!-- Mid box for navbar -->
+        <div class="mid">
+            <ul class="navbar">
+                <li><a onclick="cmd('docker --version')">Docker Info</a></li>
+                <li><a onclick="runContainer()">Images List</a></li>
+                <li><a onclick="runContainer()">Container List</a></li>
+                <li><a onclick="cmd('docker ps -a')">Running Container</a></li>
+                <li><a onclick="cmd('docker run -dt')">Run Container</a></li>
+                <li><a onclick="cmd('docker rmi --force')">Remove Images</a></li>
+            </ul>
+        </div>
+
+        <!-- Right box for buttons -->
+        <div class="right">
+            <button class="btn">Call Us Now</button>
+            <button class="btn">Email Us</button>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Welcome To Docker WebUI</h1>
+        <form action="noaction.php">
+            <div class="form-group">
+                <input type="text" name="" placeholder="Enter your Command">
+            </div>
+            <button  onclick="cgi()" class="btn">Submit</button>
+            <output-box>output....</output-box>
+        </form>
+        
+        <div class="container2">
+            <div class="ouput-box">
+              <pre id="output">
+    
+              </pre>
+            </div>
+          </div>
+    </div>
+    <script>
+        document.querySelector(".container2").style.display = "block";
+      
+            function cgi(){
+              console.log('hii')
+              var input= document.getElementById("inp").value
+              var xhr= new XMLHttpRequest();
+              xhr.open("GET","http://IP_address/cgi-bin/docker.py?x="+input, true);
+              xhr.send();
+              xhr.onload= function(){
+                      console.log("onload")
+                var output= xhr.responseText;
+                      console.log(output)
+                document.getElementById("output").innerHTML= output
+              }
+            }
+            function dImages(){
+              document.getElementById("inp").value='docker images';
+              cgi();
+            }
+            function runContainer(){
+              document.getElementById("inp").value='docker run -it centos';
+              cgi();
+            }
+            function cmd(str){
+              document.querySelector(".error").style.display = "none";
+              var inputValue = document.getElementById("inp").value;
+              if(inputValue){
+                document.getElementById("inp").value= str+" "+inputValue;
+                cgi();
+              }else{
+                document.querySelector(".error").style.display = "block";
+              }
+            }
+          </script>
+</body>
+
+</html>
